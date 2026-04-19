@@ -14,7 +14,7 @@ func InitDatabase() *gorm.DB {
 	host := getEnv("DB_HOST", "localhost")
 	port := getEnv("DB_PORT", "3306")
 	user := getEnv("DB_USER", "user1")
-	password := getEnv("DB_PASSWORD", "1234")
+	password := getEnv("DB_PASSWORD", "123")
 	dbName := getEnv("DB_NAME", "fleetify")
 
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",

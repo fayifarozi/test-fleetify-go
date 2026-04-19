@@ -6,6 +6,7 @@ import (
 
 	"backend/config"
 	"backend/database"
+	"backend/router"
 
 	"github.com/gofiber/fiber/v3"
 )
@@ -27,6 +28,8 @@ func main() {
 			"message": "API is running",
 		})
 	})
+
+	router.SetupRoutes(app, db)
 
 	addr := fmt.Sprintf(":%s", cfg.AppPort)
 	log.Printf("API starting on %s", addr)

@@ -1,6 +1,6 @@
 INSERT IGNORE INTO `users` (`username`, `password`, `role`, `created_at`, `updated_at`) VALUES
-('admin', '$2a$10$YourBcryptHashHereForAdmin123', 'admin', NOW(), NOW()),
-('kerani', '$2a$10$YourBcryptHashHereForKerani123', 'kerani', NOW(), NOW());
+('admin', '$2y$10$MY7InMkCAmRYRrwYTGntH.TPCyO647E554c1Q00X7D4VVBY3RFoVO', 'admin', NOW(), NOW()),
+('kerani', '$2y$10$MY7InMkCAmRYRrwYTGntH.TPCyO647E554c1Q00X7D4VVBY3RFoVO', 'kerani', NOW(), NOW());
 
 INSERT IGNORE INTO `items` (`code`, `name`, `price`, `created_at`, `updated_at`) VALUES
 ('BRG-001', 'Ban Truk Bridgestone R22.5', 3500000.00, NOW(), NOW()),

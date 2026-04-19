@@ -4,16 +4,16 @@ services:
     container_name: fleetify-db
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: ${DB_USER:-user1}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-1234}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-123}
       MYSQL_DATABASE: ${DB_NAME:-fleetify}
     ports:
       - "${DB_PORT:-3306}:3306"
     volumes:
       - fleetify-data:/var/lib/mysql
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u ${DB_USER:-user1} -p${DB_PASSWORD:-1234}"]
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u ${DB_USER:-user1} -p${DB_PASSWORD:-123}"]
       interval: 5s
       timeout: 5s
       retries: 10
