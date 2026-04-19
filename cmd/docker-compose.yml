@@ -1,0 +1,52 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: fleetify-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_USER: ${DB_USER:-user1}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-1234}
+      MYSQL_DATABASE: ${DB_NAME:-fleetify}
+    ports:
+      - "${DB_PORT:-3306}:3306"
+    volumes:
+      - fleetify-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u ${DB_USER:-user1} -p${DB_PASSWORD:-1234}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - fleetify-net
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: ../cmd/Dockerfile.backend
+    container_name: fleetify-backend
+    restart: unless-stopped
+    environment:
+      APP_PORT: ${APP_PORT:-8089}
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USER: ${DB_USER:-user1}
+      DB_PASSWORD: ${DB_PASSWORD:-123}
+      DB_NAME: ${DB_NAME:-fleetify}
+      DB_SSLMODE: ${DB_SSLMODE:-disable}
+      JWT_SECRET: ${JWT_SECRET:-super-secret}
+    ports:
+      - "${BACKEND_PORT:-8089}:8089"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - fleetify-net
+
+volumes:
+  fleetify-data:
+    driver: local
+
+networks:
+  fleetify-net:
+    driver: bridge
