@@ -50,7 +50,7 @@ services:
       container_name: fleetify-frontend
       restart: unless-stopped
       environment:
-        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8080}
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8089}
       ports:
         - "${FRONTEND_PORT:-3000}:3000"
       depends_on:

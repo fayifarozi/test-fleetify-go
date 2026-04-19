@@ -6,6 +6,7 @@ import (
 
 	"backend/config"
 	"backend/database"
+	"backend/middleware"
 	"backend/router"
 
 	"github.com/gofiber/fiber/v3"
@@ -21,6 +22,8 @@ func main() {
 	app := fiber.New(fiber.Config{
 		AppName: "API v1.0",
 	})
+
+	middleware.SetupCORS(app)
 
 	app.Get("/check", func(c fiber.Ctx) error {
 		return c.JSON(fiber.Map{
