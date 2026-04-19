@@ -3,6 +3,7 @@ package handler
 import (
 	"fmt"
 	"math/rand"
+	"strconv"
 	"time"
 
 	"backend/models"
@@ -149,10 +150,34 @@ func (h *InvoiceHandler) CreateInvoice(c fiber.Ctx) error {
 }
 
 func (h *InvoiceHandler) GetInvoices(c fiber.Ctx) error {
+	pageStr := c.Query("page", "1")
+	limitStr := c.Query("limit", "10")
+
+	page, err := strconv.Atoi(pageStr)
+	if err != nil || page < 1 {
+		page = 1
+	}
+
+	limit, err := strconv.Atoi(limitStr)
+	if err != nil || limit < 1 {
+		limit = 10
+	}
+
+	offset := (page - 1) * limit
+
 	var invoices []models.Invoice
+	var total int64
+
+	if err := h.DB.Model(&models.Invoice{}).Count(&total).Error; err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Failed to count invoices",
+		})
+	}
 
 	if err := h.DB.Preload("Creator").
 		Order("created_at DESC").
+		Offset(offset).
+		Limit(limit).
 		Find(&invoices).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": "Failed to fetch invoices",
@@ -166,6 +191,12 @@ func (h *InvoiceHandler) GetInvoices(c fiber.Ctx) error {
 
 	return c.JSON(fiber.Map{
 		"data": response,
+		"meta": fiber.Map{
+			"page":        page,
+			"limit":       limit,
+			"total":       total,
+			"total_pages": (int(total) + limit - 1) / limit,
+		},
 	})
 }
 
